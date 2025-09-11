@@ -1,0 +1,33 @@
+// Gives the minimum distance from src to every node , if any node is non reachable then it marked -1....
+
+class Solution {
+  public:
+    vector<int> shortestPath(int src,int v, int e, vector<vector<int>>& edges) {
+        // code here
+        vector<vector<pair<int,int>>> adj(v);
+        for(auto it:edges) {
+            adj[it[0]].push_back({it[1],it[2]}); //it[0] = src , it[1] = dest , it[2] = weight
+        }
+        vector<int> ans(v,1e9);
+        ans[src] = 0;
+        priority_queue<pair<int,int>,vector<pair<int,int>>,greater<pair<int,int>>> pq;
+        pq.push({src,0});
+        
+        while(!pq.empty()) {
+            int dist = pq.top().first;
+            int node = pq.top().second;
+            pq.pop();
+            
+            for(auto it:adj[node]) {
+                if(ans[it.first]>dist+it.second) {
+                    ans[it.first] = dist+it.second;
+                    pq.push({ans[it.first],it.first});
+                }
+            }
+        }
+        
+        for(int i=0;i<v;i++) if(ans[i]==1e9) ans[i] = -1;
+        
+        return ans;
+    }
+};
