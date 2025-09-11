@@ -2,6 +2,8 @@ class Solution {
   public:
     // Function to return list containing vertices in Topological order.
     // Also for detecting loop in Directed Graph 
+    // Kahn's Algorithm
+
     vector<int> topologicalSort(vector<vector<int>>& adj) {
         // Your code here
         int v = adj.size();
