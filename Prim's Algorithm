@@ -1,0 +1,38 @@
+// Problem -> Given a weighted, undirected, and connected graph with V vertices and E edges, your task is to find the sum of the weights
+// of the edges in the Minimum Spanning Tree (MST) of the graph. The graph is provided as a list of edges, where each edge is represented as [u, v, w],
+// indicating an edge between vertex u and vertex v with edge weight w.
+
+class Solution {
+  public:
+    int minimumSpanningTree(int V, vector<vector<int>>& edges) {
+        vector<vector<pair<int,int>>> adj(V);
+        for(auto it:edges) {
+            adj[it[0]].push_back({it[1],it[2]});
+            adj[it[1]].push_back({it[0],it[2]});
+        }
+        
+        priority_queue<pair<int,pair<int,int>>,vector<pair<int,pair<int,int>>>,greater<pair<int,pair<int,int>>>> pq;
+        vector<int> vis(V,0);
+        
+        pq.push({0,{0,-1}});
+        
+        int ans = 0;
+        while(!pq.empty()) {
+            int dist = pq.top().first;
+            int node = pq.top().second.first;
+            int par = pq.top().second.second;
+            pq.pop();
+            
+            if(vis[node]) continue;
+            vis[node] = 1;
+            ans += dist;
+            
+            for(auto it:adj[node]) {
+                if(it.first!=par) {
+                    pq.push({it.second,{it.first,node}});
+                }
+            }
+        }
+        return ans;
+    }
+};
