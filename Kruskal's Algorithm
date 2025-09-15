@@ -1,0 +1,53 @@
+class DisJointSet {
+    public:
+    vector<int> size;
+    vector<int> parent;
+    
+    DisJointSet(int n) {
+        size.resize(n+1,1);
+        parent.resize(n+1);
+        for(int i=0;i<=n;i++) parent[i] = i;
+    }
+
+    int findPar(int node) {
+        if(node == parent[node]) return node;
+        return parent[node] = findPar(parent[node]);
+    }
+
+    void unionBySize(int u,int v) {
+        int ultParOfU = findPar(u);
+        int ultParOfV = findPar(v);
+        if(ultParOfU == ultParOfV) return ;
+        if(size[ultParOfU] > size[ultParOfV]) {
+            parent[ultParOfV] = ultParOfU;
+            size[ultParOfU]+=size[ultParOfV];
+        }
+        else {
+            parent[ultParOfU] = ultParOfV;
+            size[ultParOfV]+=size[ultParOfU];
+        }
+    }
+};
+
+
+class Solution {
+  public:
+    int kruskalsMST(int V, vector<vector<int>> &edges) {
+        vector<vector<int>> adj;
+        for(auto it:edges) {
+            adj.push_back({it[2],it[0],it[1]});
+        }
+        sort(adj.begin(),adj.end());
+        DisJointSet ds(V);
+        int ans = 0;
+        for(auto it:adj) {
+            int u = it[1];
+            int v = it[2];
+            if(ds.findPar(u)!=ds.findPar(v)) {
+                ans+=it[0];
+                ds.unionBySize(u,v);
+            }
+        }
+        return ans;
+    }
+};
